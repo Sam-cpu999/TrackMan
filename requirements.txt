@@ -1,0 +1,11 @@
+requests
+discord.py
+psutil
+Pillow
+pyttsx3
+pyautogui
+socket
+uuid
+tempfile
+pyperclip
+datetime
