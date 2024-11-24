@@ -6,13 +6,11 @@ A very potent and probably the most persistent open-source RAT with over 30 modu
 
 ## Features
 
-- Over **30 modules** for **Command and Control (C2)** remote control.
-- **Incredibly persistent**. If the victim closes the rat, it reopens within a minute.
+- Over **20 modules** for **Command and Control (C2)** remote control.
 - **Fully configgable with a builder script**. you can choose different modes and settings for the exe
 - **Relatively small exe size**, weighing in at around 27 MB.
 - Provides **full remote access** to compromised systems.
 - Includes a built in **stealer**
-- Automatically adds **exclusions** so windows defender will not remove it at all.
 
 ## Installation
 

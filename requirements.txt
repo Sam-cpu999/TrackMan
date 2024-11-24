@@ -9,3 +9,14 @@ uuid
 tempfile
 pyperclip
 datetime
+asyncio
+pynput
+tkinter
+pywin32
+pycryptodome
+win10toast
+pyzipper
+wmi
+comtypes
+pycaw
+aiohttp

