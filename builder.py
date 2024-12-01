@@ -74,4 +74,5 @@ def main():
     if run_build_script():
         if build_project(icon_file): clean_up()
     print(f"JOIN OUR DISCORD AT {discordinv}")
+tt()    
 if __name__ == "__main__": main()
