@@ -1,5 +1,5 @@
 from co.discordinv import discordinv
-import subprocess, shutil, requests, os, sys, base64
+import subprocess, shutil, requests, os, sys, base64, est
 os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
 def check_token(bot_token):
     if not bot_token: return False
